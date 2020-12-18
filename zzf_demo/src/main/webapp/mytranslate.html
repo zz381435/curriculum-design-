@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:v-on="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link type="text/css" rel="stylesheet" href="./bootstrap/css/bootstrap.min.css">
+    <script type="text/javascript" src="./js/jquery-3.4.1.min.js"></script>
+    <script type="text/javascript" src="./js/vue.js"></script>
+</head>
+<style>
+    .mybutton{
+        height: 34px;
+        width: 80px;
+        background-color: red;
+    }
+</style>
+<body>
+    <div id="app">
+
+        <!--搜索栏-->
+        <div style="width: 900px; height: 450px; margin: 0 auto; margin-top: 50px">
+            <div class="col-lg-6" style="margin-top: 50px">
+                <div class="input-group">
+                    <select class="form-control">
+                        <option>中文 》英语</option>
+                        <option>英文 》中文</option>
+                        <option>中文 》意大利语</option>
+                    </select>
+                    <span class="input-group-btn">
+                    <button class="btn btn-default mybutton" type="button" v-on:click="translate()">翻译</button>
+                    </span>
+                </div><!-- /input-group -->
+            </div><!-- /.col-lg-6 -->
+            <br>
+
+            <!--文本域-->
+            <textarea class="form-control" rows="12" style="width: 400px; float : right; display: block; margin-top: 100px;">{{enText}}</textarea>
+            <!--文本域-->
+            <textarea class="form-control" rows="12" style="width: 400px; float: left; margin-top: 36px" v-text="zhText" id="zhText">{{zhText}}</textarea>
+        </div>
+    </div>
+</body>
+<script type="text/javascript">
+    var vue = new Vue({
+        el: '#app',
+        data: {
+            zhText:"",
+            enText:"",
+        },
+        methods:{
+            translate:function(){
+                // 获取中文
+                var zhText = $("#zhText").val();
+                $.ajax({
+                    url:"/translate",
+                    type:"GET",
+                    contentType: "application/json; charset=utf-8",
+                    data:{text : zhText},
+                    success:function(result){
+                        vue.enText = result.trans_result[0].dst;
+                    }
+                });
+            }
+        },
+    })
+
+</script>
+</html>
